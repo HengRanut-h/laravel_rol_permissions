@@ -1,11 +1,15 @@
 <x-app-layout>
+    @section('css')
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    @endsection
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Permission List') }}
         </h2>
         @can('create-permissions')
             <button type="button" onclick="window.location='{{ route('permissions.create') }}'"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline align-right mt-2">
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 bg-success ">
                 Create New Permission</button>
             <x-message />
         @endcan
@@ -14,15 +18,15 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <table class="min-w-full">
+                    <table class="w-full">
                         <thead>
                             <tr>
-                                <th class="px-4 py-2 ">#</th>
-                                <th class="px-4 py-2">Name</th>
-                                <th class="px-4 py-2">Create At</th>
-                                @can('delete-permissions|edit-permissions')
-                                    <th class="px-4 py-2">Action</th>
-                                @endcan
+                                <th class="border px-4 py-2 text-center">#</th>
+                                <th class="border px-4 py-2 text-center">Name</th>
+                                <th class="border px-4 py-2 text-center">Create At</th>
+                                @canany(['edit-permissions', 'delete-permissions'])
+                                    <th class="border px-4 py-2 text-center">Action</th>
+                                @endcanany
                             </tr>
                         </thead>
 
@@ -37,20 +41,23 @@
                                     <td class="border px-4 py-2">{{ $permission->id }}</td>
                                     <td class="border px-4 py-2">{{ $permission->name }}</td>
                                     <td class="border px-4 py-2">
+
                                         {{ \Carbon\Carbon::parse($permission->created_at)->format('d-m-y') }}</td>
+
+
                                     @can('edit-permissions')
-                                        <td><a href="{{ route('permissions.edit', $permission->id) }}"
-                                                class="bg-blue-500 text-white hover:bg-blue-700 px-4 py-1 rounded">Edit</a>
-                                        </td>
-                                    @endcan
-                                    @can('delete-permissions')
-                                        <td>
+                                        <td class="border px-4 py-2"><a
+                                                href="{{ route('permissions.edit', $permission->id) }}"
+                                                class="btn btn-primary bg-blue-500 text-white hover:bg-blue-700 px-4 py-1 rounded flex-md-row">Edit</a>
+                                        @endcan
+                                        @can('delete-permissions')
                                             <button class="delete bg-red-500 text-white hover:bg-red-700 px-4 py-1 rounded"
                                                 data-id="{{ $permission->id }}">
                                                 Delete
                                             </button>
                                         </td>
                                     @endcan
+
 
                                     {{-- <td>
                                         <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST"

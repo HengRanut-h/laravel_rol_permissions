@@ -1,11 +1,15 @@
 <x-app-layout>
+     @section('css')
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    @endsection
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Post List') }}
         </h2>
         @can('create-posts')
             <button type="button" onclick="window.location='{{ route('article.create') }}'"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline align-right mt-2">
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline align-right mt-2 bg-black">
                 Create New Article</button>
             <x-message />
         @endcan
@@ -17,14 +21,15 @@
                     <table class="min-w-full">
                         <thead>
                             <tr>
-                                <th class="px-4 py-2 ">#</th>
-                                <th class="px-4 py-2">Title</th>
-                                <th class="px-4 py-2">Content</th>
-                                <th class="px-4 py-2">Author</th>
-                                <th class="px-4 py-2">Create At</th>
-                                @can('edit-posts|delete-posts')
-                                    <th class="px-4 py-2">Action</th>
-                                @endcan
+                                <th class="border px-4 py-2 text-center ">#</th>
+                                <th class="border px-4 py-2 text-center ">by User</th>
+                                <th class="border px-4 py-2 text-center">Title</th>
+                                <th class="border px-4 py-2 text-center">Content</th>
+                                <th class="border px-4 py-2 text-center">Author</th>
+                                <th class="border px-4 py-2 text-center">Create At</th>
+                                @canany(['edit-posts','delete-posts'])
+                                    <th class="border px-4 py-2 text-center ">Action</th>
+                                @endcanany
                             </tr>
                         </thead>
 
@@ -37,21 +42,22 @@
                             @foreach ($articles as $article)
                                 <tr class="text-center">
                                     <td class="border px-4 py-2">{{ $article->id }}</td>
+                                    <td class="border px-4 py-2">{{ optional($article->user)->name }}</td>
                                     <td class="border px-4 py-2">{{ $article->title }}</td>
                                     <td class="border px-4 py-2">{{ $article->content }}</td>
                                     <td class="border px-4 py-2">{{ $article->author }}</td>
                                     <td class="border px-4 py-2">
                                         {{ \Carbon\Carbon::parse($article->created_at)->format('d M Y') }}</td>
                                     @can('edit-posts')
-                                        <td>
+                                        <td class="px-4 py-2 text-center d-flex justify-content-center align-content-center space-x-2">
                                             <button
                                                 class="btn btn-primary bg-blue-500 text-white hover:bg-blue-700 px-4 py-1 rounded flex-md-row ">
                                                 <a href="{{ route('article.edit', $article->id) }}">Edit</a>
                                             </button>
-                                        </td>
+
                                     @endcan
                                     @can('delete-posts')
-                                        <td>
+
                                             <form action="{{ route('article.destroy', $article->id) }}" method="post">
                                                 @method('DELETE')
                                                 @csrf

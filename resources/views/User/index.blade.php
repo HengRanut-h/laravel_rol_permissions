@@ -22,9 +22,9 @@
                                 <th class="px-4 py-2">Role</th>
                                 <th class="px-4 py-2">Gmail</th>
                                 <th class="px-4 py-2">Create At</th>
-                                @can('delete-users|edit-users')
+                                @canany(['delete-users','edit-users'])
                                     <th class="px-4 py-2">Action</th>
-                                @endcan
+                                @endcanany
                             </tr>
                         </thead>
 

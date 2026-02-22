@@ -6,6 +6,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -67,6 +68,7 @@ public function store(Request $request)
     $article->title = $request->title;
     $article->content = $request->content;
     $article->author = $request->author;
+    $article->user_id = Auth::id();
     $article->save();
 
     return redirect()->route('article.index');
@@ -77,8 +79,18 @@ public function store(Request $request)
      */
     public function show(Article $article)
     {
-        //
+        return view('article.show', compact('article'));
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+   
+
+    /**
+     * Display the specified resource.
+     */
+
 
     /**
      * Show the form for editing the specified resource.

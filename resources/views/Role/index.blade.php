@@ -1,4 +1,8 @@
 <x-app-layout>
+     @section('css')
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    @endsection
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Role List') }}
@@ -18,14 +22,14 @@
                     <table class="min-w-3000">
                         <thead>
                             <tr>
-                                <th class="px-4 py-2 ">#</th>
-                                <th class="px-4 py-2">Name</th>
-                                <th class="px-4 py-2">Permissions</th>
-                                <th class="px-4 py-2">Guard Name</th>
-                                <th class="px-4 py-2">Create At</th>
-                                @can('edit-rols|delete-rols')
-                                    <th class="px-4 py-2">Action</th>
-                                @endcan
+                                <th class="border px-4 py-2 w-32 text-center"">#</th>
+                                <th class="border px-4 py-2 text-center">Name</th>
+                                <th class="border px-4 py-2">Permissions</th>
+                                <th class="border px-4 py-2 text-center">Guard Name</th>
+                                <th class="border px-4 py-2 text-center">Create At</th>
+                                @canany(['edit-roles','delete-roles'])
+                                    <th class="border px-4 py-2 text-center">Action</th>
+                                @endcanany
                             </tr>
                         </thead>
 
@@ -37,8 +41,8 @@
                             @endif
                             @foreach ($role as $role)
                                 <tr class="text-center border-b">
-                                    <td class="px-4 py-2 w-16 text-center">{{ $role->id }}</td>
-                                    <td class="px-4 py-2 w-40">{{ $role->name }}</td>
+                                    <td class="border px-4 py-2 w-16 text-center">{{ $role->id }}</td>
+                                    <td class="border px-4 py-2 w-40">{{ $role->name }}</td>
                                     <td class="border px-4 py-2 text-left">
                                         <div class="flex flex-wrap gap-2">
                                             @foreach ($role->permissions as $permission)
@@ -52,17 +56,16 @@
                                     <td class="border px-4 py-2 w-32 text-center">{{ $role->guard_name }}</td>
                                     <td class="border px-4 py-2 w-32 text-center">
                                         {{ \Carbon\Carbon::parse($role->created_at)->format('d M Y') }}</td>
-                                    @can('edit-rols')
-                                        <td
-                                            class="px-4 py-2 text-center d-flex justify-content-center align-content-center">
+                                    @can('edit-roles')
+                                        <td class="px-4 py-2 text-center d-flex justify-content-center align-content-center space-x-2">
                                             <button
                                                 class="btn btn-primary bg-blue-500 text-white hover:bg-blue-700 px-4 py-1 rounded flex-md-row ">
                                                 <a href="{{ route('role.edit', $role->id) }}">Edit</a>
                                             </button>
-                                        </td>
+
                                     @endcan
-                                    @can('delete-rols')
-                                        <td class="border px-4 py-2 w-32 text-center ">
+                                    @can('delete-roles')
+
                                             <form action="{{ route('role.destroy', $role->id) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
